@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Build and Push Docker Image
 
 on:
   push:
@@ -14,18 +14,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-     
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          token: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      
-      - name: Build Docker image
-        run: docker build -t faareharaza/react-todo-app:latest .
+      - name: Build the Docker image
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/react-todo-app:latest .
 
-     
-      - name: Push Docker image
-        run: docker push faareharaza/react-todo-app:latest
-s
+      - name: Push to Docker Hub
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/react-todo-app:latest
