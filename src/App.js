@@ -31,7 +31,7 @@ function App() {
       <h1> My Notes Apps..</h1>
       <div className="input-area">
         <textarea
-          placeholder="Write a note..."
+          placeholder="Write a note.."
           value={text}
           onChange={(e) => setText(e.target.value)}
         ></textarea>
