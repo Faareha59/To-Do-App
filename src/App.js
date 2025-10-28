@@ -28,7 +28,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1>📝 My Notes</h1>
+      <h1>📝 My Notes App</h1>
       <div className="input-area">
         <textarea
           placeholder="Write a note..."
