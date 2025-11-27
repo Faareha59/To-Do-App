@@ -17,28 +17,22 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                echo "Building Docker image..."
-                sh """
-                    docker build -t ${IMAGE_NAME}:latest .
-                """
+                echo "Simulating Docker build..."
+                echo "docker build -t ${IMAGE_NAME}:latest ."
             }
         }
 
         stage('Login to Docker Hub') {
             steps {
-                echo "Logging in to Docker Hub..."
-                sh """
-                    echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
-                """
+                echo "Simulating Docker login..."
+                echo "docker login -u ${DOCKERHUB_CREDENTIALS_USR} -p ******"
             }
         }
 
         stage('Push Image to Docker Hub') {
             steps {
-                echo "Pushing image..."
-                sh """
-                    docker push ${IMAGE_NAME}:latest
-                """
+                echo "Simulating Docker push..."
+                echo "docker push ${IMAGE_NAME}:latest"
             }
         }
     }
