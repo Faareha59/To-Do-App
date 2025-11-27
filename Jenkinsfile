@@ -2,41 +2,53 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB = credentials('dockerhub-credentials-id')  
-        IMAGE_NAME = "faareha59/todo-app"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+        IMAGE_NAME = "faareharaza/todo-app"
     }
 
     stages {
 
-        stage('Checkout Code') {
+        stage('Pull Code from GitHub') {
             steps {
-                git branch: 'main', url: 'https://github.com/Faareha59/To-Do-App.git'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Build App') {
-            steps {
-                sh 'npm run build'
+                echo "Pulling source code..."
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t ${IMAGE_NAME}:latest .'
+                echo "Building Docker image..."
+                sh """
+                    docker build -t ${IMAGE_NAME}:latest .
+                """
+            }
+        }
+
+        stage('Login to Docker Hub') {
+            steps {
+                echo "Logging in to Docker Hub..."
+                sh """
+                    echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
+                """
             }
         }
 
         stage('Push Image to Docker Hub') {
             steps {
-                sh "echo ${DOCKERHUB_PSW} | docker login -u ${DOCKERHUB_USR} --password-stdin"
-                sh "docker push ${IMAGE_NAME}:latest"
+                echo "Pushing image..."
+                sh """
+                    docker push ${IMAGE_NAME}:latest
+                """
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline executed successfully!"
+        }
+        failure {
+            echo "Pipeline failed."
         }
     }
 }
